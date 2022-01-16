@@ -27,8 +27,18 @@
  *  21 => 'Fizz'
  *
  */
-function getFizzBuzz(/* num */) {
-  throw new Error('Not implemented');
+function getFizzBuzz(num) {
+  let result;
+  if ((num % 3 === 0) && (num % 5 === 0)) {
+    result = 'FizzBuzz';
+  } else if (num % 3 === 0) {
+    result = 'Fizz';
+  } else if (num % 5 === 0) {
+    result = 'Buzz';
+  } else if ((num % 3 !== 0) && (num % 5 !== 0)) {
+    result = num;
+  }
+  return result;
 }
 
 
@@ -156,8 +166,9 @@ function doRectanglesOverlap(/* rect1, rect2 */) {
  *   { center: { x:0, y:0 }, radius:10 },  { x:10, y:10 }   => false
  *
  */
-function isInsideCircle(/* circle, point */) {
-  throw new Error('Not implemented');
+function isInsideCircle(circle, point) {
+  return (point.x - circle.center.x) * (point.x - circle.center.x)
+  + (point.y - circle.center.y) * (point.y - circle.center.y) < circle.radius * circle.radius;
 }
 
 
@@ -172,8 +183,14 @@ function isInsideCircle(/* circle, point */) {
  *   'abracadabra'  => 'c'
  *   'entente' => null
  */
-function findFirstSingleChar(/* str */) {
-  throw new Error('Not implemented');
+function findFirstSingleChar(str) {
+  const newArr = str.split('');
+  const result = [];
+  newArr.forEach((item) => {
+    newArr.splice(newArr.indexOf(item), 1);
+    if (!newArr.includes(item)) result.push(item);
+  });
+  return result[0];
 }
 
 
@@ -258,8 +275,29 @@ function reverseInteger(num) {
  *   5436468789016589 => false
  *   4916123456789012 => false
  */
-function isCreditCardNumber(/* ccn */) {
-  throw new Error('Not implemented');
+function isCreditCardNumber(ccn) {
+  const newArr = String(ccn).split('');
+  const evenArr = () => {
+    for (let i = 0; i < newArr.length; i += 2) {
+      const item = newArr[i] * 2 < 9
+        ? newArr[i] * 2 : String(newArr[i] * 2).split('').reduce((a, b) => +a + +b);
+
+      newArr[i] = item;
+    }
+    return newArr;
+  };
+  const oddArr = () => {
+    for (let i = 1; i < newArr.length; i += 2) {
+      const item = newArr[i] * 2 < 9
+        ? newArr[i] * 2 : String(newArr[i] * 2).split('').reduce((a, b) => +a + +b);
+
+      newArr[i] = item;
+    }
+    return newArr;
+  };
+  const result = (newArr.length) % 2 === 0 ? evenArr() : oddArr();
+  const sum = result.reduce((a, b) => +a + +b);
+  return sum % 10 === 0;
 }
 
 /**
@@ -276,8 +314,11 @@ function isCreditCardNumber(/* ccn */) {
  *   10000 ( 1+0+0+0+0 = 1 ) => 1
  *   165536 (1+6+5+5+3+6 = 26,  2+6 = 8) => 8
  */
-function getDigitalRoot(/* num */) {
-  throw new Error('Not implemented');
+function getDigitalRoot(num) {
+  const newArr = String(num).split('');
+  const sum = newArr.reduce((a, b) => +a + +b);
+  const result = sum < 9 ? sum : String(sum).split('').reduce((a, b) => +a + +b);
+  return result;
 }
 
 
