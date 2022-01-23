@@ -135,8 +135,18 @@ function isTriangle(a, b, c) {
  *   { top:20, left:20, width: 20, height: 20 }    =>  false
  *
  */
-function doRectanglesOverlap(/* rect1, rect2 */) {
-  throw new Error('Not implemented');
+function doRectanglesOverlap(rect1, rect2) {
+  const x1 = rect1.left;
+  const y1 = rect1.top;
+  const x2 = x1 + rect1.width;
+  const y2 = y1 + rect1.height;
+
+  const a1 = rect2.left;
+  const b1 = rect2.top;
+  const a2 = a1 + rect2.width;
+  const b2 = b1 + rect2.height;
+  return (((a1 <= x1 && x1 <= a2) || ((x1 <= a1 && a1 <= x2)))
+  && ((b1 <= y1 && y1 <= b2) || (y1 <= b1 && b1 <= y2)));
 }
 
 
@@ -216,8 +226,18 @@ function findFirstSingleChar(str) {
  *   5, 3, true, true   => '[3, 5]'
  *
  */
-function getIntervalString(/* a, b, isStartIncluded, isEndIncluded */) {
-  throw new Error('Not implemented');
+function getIntervalString(a, b, isStartIncluded, isEndIncluded) {
+  let result = '';
+  if (isStartIncluded === true && isEndIncluded === true) {
+    result = a < b ? `[${a}, ${b}]` : `[${b}, ${a}]`;
+  } else if (isStartIncluded === false && isEndIncluded === false) {
+    result = a < b ? `(${a}, ${b})` : `(${b}, ${a})`;
+  } else if (isStartIncluded === true && isEndIncluded === false) {
+    result = a < b ? `[${a}, ${b})` : `[${b}, ${a})`;
+  } else if (isStartIncluded === false && isEndIncluded === true) {
+    result = a < b ? `(${a}, ${b}]` : `(${b}, ${a}]`;
+  }
+  return result;
 }
 
 
@@ -343,8 +363,45 @@ function getDigitalRoot(num) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
+function isBracketsBalanced(str) {
+  const newArr = str.split('');
+  const stack = [];
+
+  // eslint-disable-next-line no-restricted-syntax
+  for (const item of newArr) {
+    if (item === '(' || item === '[' || item === '{' || item === '<') {
+      stack.push(item);
+      // eslint-disable-next-line no-continue
+      continue;
+    }
+    if (stack.length === 0) return false;
+
+    let check;
+    // eslint-disable-next-line default-case
+    switch (item) {
+      case ')':
+        check = stack.pop();
+        if (check === '{' || check === '[' || check === '<') return false;
+        break;
+
+      case '}':
+        check = stack.pop();
+        if (check === '(' || check === '[' || check === '<') return false;
+        break;
+
+      case ']':
+        check = stack.pop();
+        if (check === '(' || check === '{' || check === '<') return false;
+        break;
+
+      case '>':
+        check = stack.pop();
+        if (check === '(' || check === '{' || check === ']') return false;
+        break;
+    }
+  }
+
+  return (stack.length === 0);
 }
 
 
@@ -368,8 +425,9 @@ function isBracketsBalanced(/* str */) {
  *    365, 4  => '11231'
  *    365, 10 => '365'
  */
-function toNaryString(/* num, n */) {
-  throw new Error('Not implemented');
+function toNaryString(num, n) {
+  const result = num.toString(n);
+  return result;
 }
 
 
@@ -385,8 +443,48 @@ function toNaryString(/* num, n */) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/verbalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(pathes) {
+  const newArr = [];
+  let comonPath = '';
+  pathes.forEach((path) => {
+    const newStr = path.split('/');
+    newArr.push(newStr);
+  });
+  const doubleArr = () => {
+    if (newArr[0][0] === newArr[1][0]) {
+      comonPath = '/';
+      if (newArr[0][1] === newArr[1][1]) {
+        comonPath = '';
+        comonPath = `/${newArr[0][1]}/`;
+        if (newArr[0][2] === newArr[1][2]) {
+          comonPath = '';
+          comonPath = `/${newArr[0][1]}/${newArr[0][2]}/`;
+        }
+      }
+    } else {
+      comonPath = '';
+    }
+    return comonPath;
+  };
+  const tripplArr = () => {
+    if (newArr[0][0] === newArr[1][0] && newArr[0][0] === newArr[2][0]) {
+      comonPath = '/';
+      if (newArr[0][1] === newArr[1][1] && newArr[0][1] === newArr[2][1]) {
+        comonPath = '';
+        comonPath = `/${newArr[0][1]}/`;
+        if (newArr[0][2] === newArr[1][2] && newArr[0][2] === newArr[2][2]) {
+          comonPath = '';
+          comonPath = `/${newArr[0][1]}/${newArr[0][2]}/`;
+        }
+      }
+    } else {
+      comonPath = '';
+    }
+    return comonPath;
+  };
+
+
+  return newArr.length === 2 ? doubleArr() : tripplArr();
 }
 
 
@@ -408,8 +506,17 @@ function getCommonDirectoryPath(/* pathes */) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  const result = [];
+  for (let i = 0; i < m1.length; i += 1) {
+    const arr = [];
+    for (let j = 0; j < m1.length; j += 1) {
+      const num = m1[i][0] * m2[0][j] + m1[i][1] * m2[1][j] + m1[i][2] * m2[2][j];
+      arr.push(num);
+    }
+    result.push(arr);
+  }
+  return result;
 }
 
 
@@ -443,8 +550,34 @@ function getMatrixProduct(/* m1, m2 */) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(position) {
+  let win;
+  if (position[0][0] === position[0][1] && position[0][0] === position[0][2]
+    && position[0][0] !== undefined) {
+    win = position[0][0] === 'X' ? 'X' : '0';
+  } else if (position[1][0] === position[1][1] && position[1][0] === position[1][2]
+    && position[1][0] !== undefined) {
+    win = position[1][0] === 'X' ? 'X' : '0';
+  } else if (position[2][0] === position[2][1] && position[2][0] === position[2][2]
+    && position[2][0] !== undefined) {
+    win = position[2][0] === 'X' ? 'X' : '0';
+  } else if (position[0][0] === position[1][0] && position[0][0] === position[2][0]
+    && position[0][0] !== undefined) {
+    win = position[0][0] === 'X' ? 'X' : '0';
+  } else if (position[0][1] === position[1][1] && position[0][1] === position[2][1]
+    && position[0][1] !== undefined) {
+    win = position[0][1] === 'X' ? 'X' : '0';
+  } else if (position[0][2] === position[1][2] && position[0][2] === position[2][2]
+    && position[0][2] !== undefined) {
+    win = position[0][2] === 'X' ? 'X' : '0';
+  } else if (position[0][0] === position[1][1] && position[0][0] === position[2][2]
+    && position[0][0] !== undefined) {
+    win = position[0][0] === 'X' ? 'X' : '0';
+  } else if (position[0][2] === position[1][1] && position[0][2] === position[2][0]
+    && position[0][2] !== undefined) {
+    win = position[0][2] === 'X' ? 'X' : '0';
+  }
+  return win;
 }
 
 
